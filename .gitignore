@@ -1,0 +1,18 @@
+# Virtual Environment
+venv/
+
+# Logs
+logs/
+
+# PDF files
+*.pdf
+
+# Temporary VS Code files
+tempCodeRunnerFile.py
+
+# Python cache
+__pycache__/
+*.pyc
+
+# VS Code settings
+.vscode/

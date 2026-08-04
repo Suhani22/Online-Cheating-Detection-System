@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Exam</title>
+
+<style>
+
+body {
+    font-family: Arial;
+    margin: 0;
+    background: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f') no-repeat center center/cover;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 16px;
+    background: blue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.overlay {
+    background: rgba(255,255,255,0.9);
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;               /* ✅ THIS FIXES SIDE-BY-SIDE */
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.questions {
+    width: 65%;
+    margin-right: 32%;
+    /* padding: 20px;
+    display: block; */
+}
+
+.camera {
+    position: fixed;        
+    top: 100px;             /* distance from top */
+    right: 20px;            /* stick to right */
+    width: 28%;
+    background: black;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    height: auto;
+}
+.camera img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.question-box {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+}
+
+#startBtn {
+    margin: 20px;
+    padding: 15px 25px;
+    font-size: 18px;
+    background: green;
+    color: white;
+    border: none;
+}
+
+#alertText {
+    color: red;
+    font-size: 18px;
+    display: none;
+}
+#warningText {
+    font-weight: bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="overlay">
+
+<h2 style="text-align:center;">Online Exam System</h2>
+
+
+<div class="container">
+
+<div class="questions" id="questions">
+
+<form id="examForm">
+
+<!-- Q1 -->
+<div class="question-box">
+Q1: What is AI?<br>
+<input type="radio" name="q1"> A. Artificial Intelligence<br>
+<input type="radio" name="q1"> B. Apple<br>
+<input type="radio" name="q1"> C. Animal<br>
+<input type="radio" name="q1"> D. None<br>
+</div>
+
+<!-- Q2 -->
+<div class="question-box">
+Q2: Python is?<br>
+<input type="radio" name="q2"> A. Language<br>
+<input type="radio" name="q2"> B. Snake<br>
+<input type="radio" name="q2"> C. Both<br>
+<input type="radio" name="q2"> D. None<br>
+</div>
+
+<!-- Q3 -->
+<div class="question-box">
+Q3: YOLO is used for?<br>
+<input type="radio" name="q3"> A. Detection<br>
+<input type="radio" name="q3"> B. Cooking<br>
+<input type="radio" name="q3"> C. Singing<br>
+<input type="radio" name="q3"> D. None<br>
+</div>
+
+<!-- Q4 -->
+<div class="question-box">
+Q4: HTML stands for?<br>
+<input type="radio" name="q4"> A. Hyper Text Markup Language<br>
+<input type="radio" name="q4"> B. High Tool ML<br>
+<input type="radio" name="q4"> C. Hyperlinks<br>
+<input type="radio" name="q4"> D. None<br>
+</div>
+
+<!-- Q5 -->
+<div class="question-box">
+Q5: CSS is used for?<br>
+<input type="radio" name="q5"> A. Styling<br>
+<input type="radio" name="q5"> B. Coding<br>
+<input type="radio" name="q5"> C. Backend<br>
+<input type="radio" name="q5"> D. None<br>
+</div>
+
+<!-- Q6 -->
+<div class="question-box">
+Q6: OpenCV is used for?<br>
+<input type="radio" name="q6"> A. Image Processing<br>
+<input type="radio" name="q6"> B. Gaming<br>
+<input type="radio" name="q6"> C. Music<br>
+<input type="radio" name="q6"> D. None<br>
+</div>
+
+<!-- Q7 -->
+<div class="question-box">
+Q7: Flask is?<br>
+<input type="radio" name="q7"> A. Framework<br>
+<input type="radio" name="q7"> B. Library<br>
+<input type="radio" name="q7"> C. Language<br>
+<input type="radio" name="q7"> D. None<br>
+</div>
+
+<!-- Q8 -->
+<div class="question-box">
+Q8: ML stands for?<br>
+<input type="radio" name="q8"> A. Machine Learning<br>
+<input type="radio" name="q8"> B. Mega Learning<br>
+<input type="radio" name="q8"> C. Micro Logic<br>
+<input type="radio" name="q8"> D. None<br>
+</div>
+
+<!-- Q9 -->
+<div class="question-box">
+Q9: Which is backend language?<br>
+<input type="radio" name="q9"> A. Python<br>
+<input type="radio" name="q9"> B. HTML<br>
+<input type="radio" name="q9"> C. CSS<br>
+<input type="radio" name="q9"> D. None<br>
+</div>
+
+<!-- Q10 -->
+<div class="question-box">
+Q10: AI is part of?<br>
+<input type="radio" name="q10"> A. Computer Science<br>
+<input type="radio" name="q10"> B. Biology<br>
+<input type="radio" name="q10"> C. Chemistry<br>
+<input type="radio" name="q10"> D. None<br>
+</div>
+
+<br>
+
+<button type="button" onclick="submitTest()">Submit Test</button>
+
+</form>
+
+</div>
+
+<div class="camera">
+<h3>Live Monitoring</h3>
+<img id="video" src="/video">
+<p id="alertText"></p>
+<p id="warningText" style="color:orange; font-size:18px;"></p>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+
+
+// ALERT FETCH
+function fetchAlert() {
+    fetch('/alert')
+    .then(res => res.json())
+    .then(data => {
+        let alertBox = document.getElementById("alertText");
+
+        if (data.alert === "No Alert") {
+            alertBox.style.display = "none";
+        } else {
+            alertBox.style.display = "block";
+            alertBox.innerText = "ALERT: " + data.alert;
+        }
+    });
+}
+
+setInterval(fetchAlert, 1000);
+
+</script>
+<script>
+
+window.addEventListener("beforeunload", function () {
+    navigator.sendBeacon('/stop_camera');
+});
+
+
+let lastTabSwitch = 0;
+
+document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+        let currentTime = Date.now();
+
+        if (currentTime - lastTabSwitch > 3000) {  // 3 sec cooldown
+            fetch('/tab_switch');
+            lastTabSwitch = currentTime;
+        }
+    }
+});
+
+function submitTest() {
+
+    // 🔥 stop camera
+    fetch('/stop_camera');
+
+    document.getElementById("video").src = "";
+
+    // 🔥 show end screen
+    document.body.innerHTML =
+        "<h1 style='color:white; text-align:center; margin-top:400px;'>TEST SUBMITTED SUCCESSFULLY :)</h3>";
+}
+
+function fetchStatus() {
+    fetch('/status')
+    .then(res => res.json())
+    .then(data => {
+
+        document.getElementById("warningText").innerText =
+            "Warnings: " + data.warnings + "/5";
+
+        if (data.terminated) {
+            alert("Exam Terminated due to cheating!");
+
+            fetch('/stop_camera');
+
+            document.getElementById("video").src = "";
+            document.body.innerHTML =
+                "<h1 style='color:white; text-align:center;margin-top:400px;'>EXAM TERMINATED :(</h1>";
+
+            return
+        }
+    });
+}
+
+setInterval(fetchStatus, 1000);
+
+</script>
+
+
+</body>
+</html>
